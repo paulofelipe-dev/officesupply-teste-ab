@@ -1,0 +1,609 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OfficeSupply - Dashboard A/B</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        header {
+            background: #0056b3;
+            color: white;
+            padding: 30px;
+        }
+
+        header h1 {
+            margin: 0 0 10px;
+        }
+
+        header p {
+            margin: 0;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit, minmax(220px, 1fr)
+            );
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            border-left: 5px solid #0056b3;
+        }
+
+        .card h3 {
+            font-size: 15px;
+            color: #64748b;
+            margin: 0 0 15px;
+        }
+
+        .card h2 {
+            font-size: 30px;
+            margin: 0;
+            color: #0056b3;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            color: #0056b3;
+        }
+
+        .chart-row {
+            margin: 25px 0;
+        }
+
+        .chart-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .progress {
+            height: 35px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 100%;
+            width: 0;
+            transition: width 0.5s;
+        }
+
+        .bar-a {
+            background: #0056b3;
+        }
+
+        .bar-b {
+            background: #15803d;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #0056b3;
+            color: white;
+            padding: 15px;
+        }
+
+        td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .resultado {
+            padding: 20px;
+            background: #eff6ff;
+            border-left: 5px solid #0056b3;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 25px 0;
+        }
+
+        button, .btn {
+            padding: 13px 20px;
+            border: none;
+            border-radius: 7px;
+            color: white;
+            background: #0056b3;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        button:hover, .btn:hover {
+            opacity: 0.85;
+        }
+
+        .btn-green {
+            background: #15803d;
+        }
+
+        .btn-red {
+            background: #dc2626;
+        }
+
+        .btn-gray {
+            background: #475569;
+        }
+
+        .notice {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        footer {
+            background: #1e293b;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <h1>OfficeSupply Analytics</h1>
+        <p>Dashboard de Monitoramento do Teste A/B</p>
+    </header>
+
+    <main class="container">
+
+        <section class="cards">
+
+            <div class="card">
+                <h3>Total de Visualizações</h3>
+                <h2 id="totalViews">0</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total de Cliques</h3>
+                <h2 id="totalClicks">0</h2>
+            </div>
+
+            <div class="card">
+                <h3>Taxa Geral de Cliques</h3>
+                <h2 id="totalRate">0%</h2>
+            </div>
+
+            <div class="card">
+                <h3>Variação Relativa de B</h3>
+                <h2 id="improvement">N/D</h2>
+            </div>
+
+        </section>
+
+        <section class="panel">
+
+            <h2>Comparativo de Desempenho</h2>
+
+            <div class="chart-row">
+
+                <div class="chart-label">
+                    <span>Versão A - Controle</span>
+                    <span id="labelA">0%</span>
+                </div>
+
+                <div class="progress">
+                    <div class="bar bar-a" id="barA"></div>
+                </div>
+
+            </div>
+
+            <div class="chart-row">
+
+                <div class="chart-label">
+                    <span>Versão B - Variante</span>
+                    <span id="labelB">0%</span>
+                </div>
+
+                <div class="progress">
+                    <div class="bar bar-b" id="barB"></div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="panel">
+
+            <h2>Resultados Detalhados</h2>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Versão</th>
+                            <th>Visualizações</th>
+                            <th>Cliques</th>
+                            <th>Taxa de Cliques</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>Controle A</td>
+                            <td id="viewsA">0</td>
+                            <td id="clicksA">0</td>
+                            <td id="rateA">0%</td>
+                        </tr>
+
+                        <tr>
+                            <td>Variante B</td>
+                            <td id="viewsB">0</td>
+                            <td id="clicksB">0</td>
+                            <td id="rateB">0%</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <section class="panel">
+
+            <h2>Análise dos Resultados</h2>
+
+            <div class="resultado" id="resultado">
+                Aguardando dados do experimento.
+            </div>
+
+            <p class="notice">
+                Os resultados são armazenados localmente
+                neste navegador. Uma taxa de cliques maior
+                não comprova significância estatística
+                nem representa vendas concluídas.
+            </p>
+
+            <p class="notice" id="lastUpdate"></p>
+
+        </section>
+
+        <div class="actions">
+
+            <a class="btn"
+               href="product-page-control.html"
+               target="_blank">
+                Abrir Versão A
+            </a>
+
+            <a class="btn btn-green"
+               href="product-page-variant.html"
+               target="_blank">
+                Abrir Versão B
+            </a>
+
+            <a class="btn btn-gray"
+               href="index.html"
+               target="_blank">
+                Executar Teste A/B
+            </a>
+
+            <button onclick="atualizarDashboard()">
+                Atualizar Dados
+            </button>
+
+            <button class="btn-green"
+                    onclick="exportarCSV()">
+                Exportar CSV
+            </button>
+
+            <button class="btn-red"
+                    onclick="limparDados()">
+                Limpar Dados
+            </button>
+
+        </div>
+
+    </main>
+
+    <footer>
+        <p>OfficeSupply Online | Projeto de Experiência do Usuário</p>
+        <p>FATEC Cotia - DSM - 2026</p>
+    </footer>
+
+    <script>
+
+        function obterDados() {
+
+            return JSON.parse(
+                localStorage.getItem("ab_metrics")
+            ) || {
+
+                A: {
+                    visualizacoes: 0,
+                    cliques: 0
+                },
+
+                B: {
+                    visualizacoes: 0,
+                    cliques: 0
+                }
+
+            };
+
+        }
+
+        function calcularTaxa(cliques, visualizacoes) {
+
+            return visualizacoes > 0
+                ? (cliques / visualizacoes) * 100
+                : 0;
+
+        }
+
+        function percentual(valor) {
+
+            return valor.toFixed(2).replace(".", ",") + "%";
+
+        }
+
+        function atualizarDashboard() {
+
+            const dados = obterDados();
+
+            const a = dados.A;
+            const b = dados.B;
+
+            const taxaA = calcularTaxa(
+                a.cliques, a.visualizacoes
+            );
+
+            const taxaB = calcularTaxa(
+                b.cliques, b.visualizacoes
+            );
+
+            const totalViews =
+                a.visualizacoes + b.visualizacoes;
+
+            const totalClicks =
+                a.cliques + b.cliques;
+
+            const taxaGeral = calcularTaxa(
+                totalClicks, totalViews
+            );
+
+            document.getElementById("totalViews")
+                .textContent = totalViews;
+
+            document.getElementById("totalClicks")
+                .textContent = totalClicks;
+
+            document.getElementById("totalRate")
+                .textContent = percentual(taxaGeral);
+
+            document.getElementById("viewsA")
+                .textContent = a.visualizacoes;
+
+            document.getElementById("viewsB")
+                .textContent = b.visualizacoes;
+
+            document.getElementById("clicksA")
+                .textContent = a.cliques;
+
+            document.getElementById("clicksB")
+                .textContent = b.cliques;
+
+            document.getElementById("rateA")
+                .textContent = percentual(taxaA);
+
+            document.getElementById("rateB")
+                .textContent = percentual(taxaB);
+
+            document.getElementById("labelA")
+                .textContent = percentual(taxaA);
+
+            document.getElementById("labelB")
+                .textContent = percentual(taxaB);
+
+            document.getElementById("barA")
+                .style.width = taxaA + "%";
+
+            document.getElementById("barB")
+                .style.width = taxaB + "%";
+
+            const possuiDados =
+                a.visualizacoes > 0 &&
+                b.visualizacoes > 0;
+
+            if (possuiDados && taxaA > 0) {
+
+                const melhoria =
+                    ((taxaB - taxaA) / taxaA) * 100;
+
+                document.getElementById("improvement")
+                    .textContent =
+                    (melhoria > 0 ? "+" : "") +
+                    percentual(melhoria);
+
+            } else {
+
+                document.getElementById("improvement")
+                    .textContent = "N/D";
+
+            }
+
+            let mensagem;
+
+            if (!possuiDados) {
+
+                mensagem =
+                    "Ainda não existem dados suficientes " +
+                    "das duas versões para realizar a comparação.";
+
+            } else if (taxaB > taxaA) {
+
+                mensagem =
+                    "A versão B apresenta uma taxa de cliques " +
+                    "superior à versão A nos dados observados. " +
+                    "É necessário coletar uma amostra adequada " +
+                    "e avaliar a significância estatística.";
+
+            } else if (taxaA > taxaB) {
+
+                mensagem =
+                    "A versão A apresenta uma taxa de cliques " +
+                    "superior à versão B nos dados observados. " +
+                    "O resultado ainda é preliminar.";
+
+            } else {
+
+                mensagem =
+                    "As duas versões apresentam a mesma " +
+                    "taxa de cliques nos dados observados.";
+
+            }
+
+            document.getElementById("resultado")
+                .textContent = mensagem;
+
+            document.getElementById("lastUpdate")
+                .textContent =
+                "Última atualização: " +
+                new Date().toLocaleString("pt-BR");
+
+        }
+
+        function exportarCSV() {
+
+            const dados = obterDados();
+
+            let csv =
+                "Versao;Visualizacoes;Cliques;Taxa de Cliques\n";
+
+            ["A", "B"].forEach(function(versao) {
+
+                const item = dados[versao];
+
+                const taxa = calcularTaxa(
+                    item.cliques,
+                    item.visualizacoes
+                );
+
+                csv +=
+                    versao + ";" +
+                    item.visualizacoes + ";" +
+                    item.cliques + ";" +
+                    percentual(taxa) + "\n";
+
+            });
+
+            const arquivo = new Blob(
+                ["\uFEFF", csv],
+                { type: "text/csv;charset=utf-8;" }
+            );
+
+            const url = URL.createObjectURL(arquivo);
+
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = "resultados-teste-ab.csv";
+
+            document.body.appendChild(link);
+
+            link.click();
+            link.remove();
+
+            URL.revokeObjectURL(url);
+
+        }
+
+        function limparDados() {
+
+            const confirmar = confirm(
+                "Deseja apagar todos os resultados locais?"
+            );
+
+            if (confirmar) {
+
+                localStorage.removeItem("ab_metrics");
+
+                atualizarDashboard();
+
+            }
+
+        }
+
+        // Carrega os dados ao abrir o painel
+        atualizarDashboard();
+
+        // Atualiza automaticamente a cada 2 segundos
+        setInterval(atualizarDashboard, 2000);
+
+        // Atualiza quando outra aba registra dados
+        window.addEventListener(
+            "storage",
+            atualizarDashboard
+        );
+
+    </script>
+
+</body>
+</html>

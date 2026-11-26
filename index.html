@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OfficeSupply Online - Teste A/B</title>
+
+    <script>
+        // Verifica se o visitante já possui uma versão
+        let versao = localStorage.getItem("ab_version");
+
+        // Distribuição aleatória de 50% para cada grupo
+        if (versao !== "A" && versao !== "B") {
+            versao = Math.random() < 0.5 ? "A" : "B";
+
+            localStorage.setItem("ab_version", versao);
+        }
+
+        // Redireciona para a versão selecionada
+        if (versao === "A") {
+            window.location.replace("product-page-control.html");
+        } else {
+            window.location.replace("product-page-variant.html");
+        }
+    </script>
+</head>
+
+<body>
+    <h2>Carregando OfficeSupply Online...</h2>
+</body>
+</html>
